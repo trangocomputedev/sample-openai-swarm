@@ -1,0 +1,4 @@
+git+https://github.com/openai/swarm.git
+openai>=1.0.0
+python-dotenv>=1.0.0
+pytest>=8.0.0
