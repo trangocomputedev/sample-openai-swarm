@@ -105,3 +105,7 @@ src/
 tests/
 main.py                # Interactive REPL + scripted demo
 ```
+
+---
+
+Built by [Trango Compute](https://trango-compute.com)
