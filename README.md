@@ -1,5 +1,7 @@
 # Sample OpenAI Swarm
 
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+
 A multi-agent customer support triage system built with [OpenAI Swarm](https://github.com/openai/swarm). Demonstrates Swarm's core patterns: agent handoffs via function returns, context variable propagation, and the `Result` type for updating shared state.
 
 ## Architecture
