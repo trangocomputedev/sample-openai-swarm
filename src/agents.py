@@ -25,6 +25,11 @@ def _transfer_to_triage():
     return triage_agent
 
 
+def _transfer_to_human():
+    """Escalate to a human agent when automated resolution is not possible."""
+    return human_escalation_agent
+
+
 def _transfer_to_billing():
     """Transfer to the billing specialist for invoice and payment questions."""
     return billing_agent
@@ -41,6 +46,21 @@ def _transfer_to_refunds():
 
 
 # ---------------------------------------------------------------------------
+# Human Escalation Agent — approval gate for unresolvable issues
+# ---------------------------------------------------------------------------
+human_escalation_agent = Agent(
+    name="HumanEscalationAgent",
+    model="gpt-4o-mini",
+    instructions=(
+        "You represent a human support supervisor. "
+        "Summarize the customer's issue and the steps already taken by automated agents. "
+        "Do not attempt to resolve the issue — present the context clearly for a human operator "
+        "to review and take ownership."
+    ),
+    functions=[_transfer_to_triage],
+)
+
+# ---------------------------------------------------------------------------
 # Billing Agent
 # ---------------------------------------------------------------------------
 billing_agent = Agent(
@@ -53,7 +73,7 @@ billing_agent = Agent(
         "If the customer needs technical help instead, transfer back to triage. "
         "If an issue cannot be resolved immediately, use create_ticket to escalate."
     ),
-    functions=[account_lookup, create_ticket, _transfer_to_triage],
+    functions=[account_lookup, create_ticket, _transfer_to_triage, _transfer_to_human],
 )
 
 # ---------------------------------------------------------------------------
@@ -68,7 +88,7 @@ tech_agent = Agent(
         "Provide step-by-step instructions. If you cannot resolve the issue, "
         "use create_ticket to open a high-priority ticket and transfer back to triage."
     ),
-    functions=[create_ticket, _transfer_to_triage],
+    functions=[create_ticket, _transfer_to_triage, _transfer_to_human],
 )
 
 # ---------------------------------------------------------------------------
@@ -84,7 +104,7 @@ refund_agent = Agent(
         "If not eligible, explain the policy clearly and offer alternatives. "
         "Transfer back to triage if the customer has a different concern."
     ),
-    functions=[check_refund_eligibility, process_refund, _transfer_to_triage],
+    functions=[check_refund_eligibility, process_refund, _transfer_to_triage, _transfer_to_human],
 )
 
 # ---------------------------------------------------------------------------
